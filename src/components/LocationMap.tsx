@@ -32,7 +32,7 @@ export default function LocationMap() {
             href="https://maps.app.goo.gl/xW5c1psodMqVc3pB7" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="bg-primary text-white hover:bg-primary/90 px-8 py-3 rounded-full text-sm font-semibold tracking-wide uppercase transition-colors"
+            className="bg-primary text-background hover:bg-primary/90 px-8 py-3 rounded-full text-sm font-semibold tracking-wide uppercase transition-colors"
           >
             Buka di Google Maps
           </a>

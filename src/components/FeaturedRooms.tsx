@@ -29,7 +29,7 @@ export default function FeaturedRooms() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {rooms.map((room) => (
-            <div key={room.id} className="group bg-white rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500">
+            <div key={room.id} className="group bg-surface rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500">
               <div className="aspect-[4/3] overflow-hidden relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 

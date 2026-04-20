@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function FloatingQuickStats() {
   return (
     <div className="absolute -bottom-20 md:-bottom-8 left-0 right-0 z-20 flex justify-center px-4 md:px-8">
-      <div className="bg-white shadow-2xl rounded-2xl md:rounded-full flex flex-col md:flex-row items-center p-2 w-full max-w-5xl border border-secondary/50">
+      <div className="bg-surface shadow-2xl rounded-2xl md:rounded-full flex flex-col md:flex-row items-center p-2 w-full max-w-5xl border border-secondary/50">
         
         {/* Kolom Informasi */}
         <div className="w-full flex-1 grid grid-cols-3 md:flex md:divide-x divide-secondary/30">
