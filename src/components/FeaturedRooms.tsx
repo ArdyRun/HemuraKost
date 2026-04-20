@@ -4,18 +4,32 @@ import { BedDouble, Bath, Square } from "lucide-react";
 export default function FeaturedRooms() {
   const rooms = [
     {
-      id: 1,
-      name: "Kamar Tipe Standar",
-      price: "Rp 1.500.000",
-      image: "/mock kamar1.png",
-      specs: ["3x4 meter", "Kamar Mandi Luar", "Single Bed"]
+      id: 19,
+      name: "Kamar Tipe VVIP",
+      price: "Rp 17.000.000",
+      image: "/mock kamar2.png",
+      specs: ["Ukuran 6x7 Meter", "Kamar Mandi Dalam", "Fasilitas AC"]
     },
     {
       id: 2,
-      name: "Kamar Tipe Eksklusif",
-      price: "Rp 2.500.000",
+      name: "Kamar Reguler AC",
+      price: "Rp 16.000.000",
+      image: "/mock kamar1.png",
+      specs: ["Ukuran Standar", "Kamar Mandi Dalam", "Fasilitas AC"]
+    },
+    {
+      id: 5,
+      name: "Kamar Reguler Non-AC",
+      price: "Rp 13.000.000",
+      image: "/mock kamar1.png",
+      specs: ["Ukuran Standar", "Kamar Mandi Dalam", "Kipas Angin"]
+    },
+    {
+      id: 8,
+      name: "Kamar Tipe Ekonomis",
+      price: "Rp 13.000.000",
       image: "/mock kamar2.png",
-      specs: ["4x5 meter", "Kamar Mandi Dalam", "Queen Bed"]
+      specs: ["Ukuran Standar", "Kamar Mandi Luar", "Kipas Angin"]
     }
   ];
 
@@ -24,7 +38,7 @@ export default function FeaturedRooms() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center mb-16">
           <h2 className="font-serif text-3xl md:text-5xl text-primary mb-4">Pilihan Kamar</h2>
-          <p className="text-primary/70 max-w-lg">Temukan ruangan yang cocok dengan kebutuhanmu.</p>
+          <p className="text-primary/70 max-w-lg">Total 27 Kamar dengan beragam tipe sesuai dengan kebutuhanmu.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -40,7 +54,7 @@ export default function FeaturedRooms() {
               </div>
               <div className="p-8 md:p-12 text-center">
                 <h3 className="font-serif text-2xl text-primary mb-2">{room.name}</h3>
-                <div className="text-xl text-cta mb-8">{room.price} <span className="text-sm text-primary/50">/ bulan</span></div>
+                <div className="text-xl text-cta mb-8">{room.price} <span className="text-sm text-primary/50">/ tahun</span></div>
                 
                 <div className="flex justify-center flex-wrap gap-6 mb-10">
                   <div className="flex items-center gap-2 text-primary/70 text-sm">
