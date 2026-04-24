@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-start pb-20">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg-kosan.jpg')" }}
       >
@@ -19,7 +19,7 @@ export default function Hero() {
             Hunian Eksekutif Pusat Kota
           </span>
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight">
-            Standar Baru Kenyamanan.
+            Standar Kenyamanan Baru.
           </h1>
           <p className="text-lg text-white/80 mb-10 font-light leading-relaxed max-w-lg">
             Temukan kamar eksklusif dengan privasi penuh dan fasilitas sekelas hotel bintang lima.

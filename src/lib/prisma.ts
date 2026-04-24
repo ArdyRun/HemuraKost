@@ -1,13 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+const connectionString = `${process.env.DATABASE_URL}`;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    // Konfigurasi tambahan Prisma 7 membaca langsung dari prisma.config.ts
-    // Tapi jika diperlukan manual override:
-    // datasources: { db: { url: process.env.DATABASE_URL } }
+    adapter,
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

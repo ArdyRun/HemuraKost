@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail, Lock, User, Phone, ArrowRight, Home } from "lucide-react";
 import type { Metadata } from "next";
+import RegisterForm from "@/components/RegisterForm";
 
 export const metadata: Metadata = {
   title: "Daftar | Hemura Kost",
@@ -49,71 +50,7 @@ export default function RegisterPage() {
             <p className="text-foreground/60 font-sans text-lg">Daftar untuk menjadi bagian dari Hemura Kost</p>
           </div>
 
-          <form className="space-y-5">
-            <div className="space-y-4">
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-cta text-foreground/40">
-                  <User className="h-5 w-5" />
-                </div>
-                <input
-                  type="text"
-                  className="block w-full pl-12 pr-4 py-3.5 border border-foreground/10 rounded-2xl bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-cta focus:border-transparent transition-all duration-300 hover:border-foreground/20"
-                  placeholder="Nama Lengkap"
-                  required
-                />
-              </div>
-
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-cta text-foreground/40">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <input
-                  type="email"
-                  className="block w-full pl-12 pr-4 py-3.5 border border-foreground/10 rounded-2xl bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-cta focus:border-transparent transition-all duration-300 hover:border-foreground/20"
-                  placeholder="Alamat Email"
-                  required
-                />
-              </div>
-
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-cta text-foreground/40">
-                  <Phone className="h-5 w-5" />
-                </div>
-                <input
-                  type="tel"
-                  className="block w-full pl-12 pr-4 py-3.5 border border-foreground/10 rounded-2xl bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-cta focus:border-transparent transition-all duration-300 hover:border-foreground/20"
-                  placeholder="Nomor Telepon"
-                  required
-                />
-              </div>
-
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-cta text-foreground/40">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <input
-                  type="password"
-                  className="block w-full pl-12 pr-4 py-3.5 border border-foreground/10 rounded-2xl bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-cta focus:border-transparent transition-all duration-300 hover:border-foreground/20"
-                  placeholder="Kata Sandi"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                className="w-full flex items-center justify-center py-3.5 px-4 rounded-2xl text-white bg-cta hover:bg-[#7a6548] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta focus:ring-offset-background transition-all duration-300 shadow-lg shadow-cta/20 hover:shadow-xl hover:shadow-cta/30 hover:-translate-y-0.5 group"
-              >
-                <span className="font-semibold font-sans text-[15px]">Daftar Akun</span>
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1.5 transition-transform duration-300" />
-              </button>
-            </div>
-            
-            <p className="text-xs text-center text-foreground/50 mt-4 leading-relaxed px-4">
-              Dengan mendaftar, Anda menyetujui <a href="#" className="text-cta hover:underline">Syarat & Ketentuan</a> serta <a href="#" className="text-cta hover:underline">Kebijakan Privasi</a> kami.
-            </p>
-          </form>
+          <RegisterForm />
 
           <div className="mt-8 pt-8 border-t border-foreground/5 text-center text-[15px] text-foreground/60">
             Sudah punya akun?{' '}
