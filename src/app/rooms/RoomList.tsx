@@ -11,8 +11,9 @@ export default function RoomList({ rooms }: { rooms: any[] }) {
 
   const filteredRooms = useMemo(() => {
     return rooms.filter((room) => {
+      const roomNumberStr = String(room.roomNumber);
       const matchesSearch = 
-        room.roomNumber.toLowerCase().includes(search.toLowerCase()) ||
+        roomNumberStr.toLowerCase().includes(search.toLowerCase()) ||
         room.type.toLowerCase().includes(search.toLowerCase());
       
       const matchesStatus = statusFilter === "ALL" || room.status === statusFilter;
