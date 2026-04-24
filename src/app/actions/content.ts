@@ -20,8 +20,7 @@ export async function updateSiteContent(key: string, value: string) {
     create: { key, value, type: "TEXT" },
   });
 
-  // @ts-expect-error Deprecated single argument in Next.js canary
-  revalidateTag("site-content", "max");
+  revalidateTag("site-content");
   return { success: true };
 }
 
@@ -34,8 +33,7 @@ export async function updateSiteImage(key: string, imageUrl: string) {
     create: { key, value: imageUrl, type: "IMAGE" },
   });
 
-  // @ts-expect-error Deprecated single argument in Next.js canary
-  revalidateTag("site-content", "max");
+  revalidateTag("site-content");
   return { success: true };
 }
 
@@ -65,7 +63,6 @@ export async function uploadSiteImageFormData(formData: FormData) {
     create: { key, value: finalUrl, type: "IMAGE" },
   });
 
-  // @ts-expect-error Deprecated single argument in Next.js canary
-  revalidateTag("site-content", "max");
+  revalidateTag("site-content");
   return { success: true };
 }

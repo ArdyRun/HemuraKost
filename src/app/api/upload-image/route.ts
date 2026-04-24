@@ -38,8 +38,7 @@ export async function POST(req: NextRequest) {
     create: { key, value: finalUrl, type: "IMAGE" },
   });
 
-  // @ts-expect-error Next.js canary deprecation
-  revalidateTag("site-content", "max");
+  revalidateTag("site-content");
 
   return NextResponse.json({ success: true, url: finalUrl });
 }
