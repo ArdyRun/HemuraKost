@@ -10,7 +10,7 @@ export default function Navbar() {
             <span className="font-serif font-bold text-2xl tracking-wider text-white drop-shadow-sm">HEMURA KOST</span>
           </Link>
           <div className="hidden md:flex gap-6 items-center">
-            <Link href="/#katalog" className="text-white/90 hover:text-white text-sm tracking-wide transition-colors duration-200">Katalog</Link>
+            <Link href="/rooms" className="text-white/90 hover:text-white text-sm tracking-wide transition-colors duration-200">Kamar</Link>
             <Link href="/#fasilitas" className="text-white/90 hover:text-white text-sm tracking-wide transition-colors duration-200">Fasilitas</Link>
             <div className="flex items-center gap-4 ml-2">
               <ThemeToggle />

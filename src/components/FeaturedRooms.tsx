@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BedDouble, Bath, Square } from "lucide-react";
+import { BedDouble, Bath, Square, ChevronRight } from "lucide-react";
 import { EditableText } from "./Editable";
 import type { ContentMap } from "@/lib/content";
 
@@ -92,6 +92,12 @@ export default function FeaturedRooms({ content, editMode }: { content?: Content
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link href="/rooms" className="inline-flex items-center gap-2 px-8 py-4 bg-cta text-white font-semibold rounded-full hover:bg-[#7a6548] transition-all hover:scale-105 shadow-xl">
+            Lihat Semua Kamar <ChevronRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
     </section>
