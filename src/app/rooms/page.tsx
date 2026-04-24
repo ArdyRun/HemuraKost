@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ChevronRight } from "lucide-react";
+import { BookingStatus, RoomStatus } from "@prisma/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RoomList from "./RoomList";
@@ -12,6 +13,14 @@ export const metadata = {
 
 export default async function RoomsPage() {
   const rooms = await prisma.room.findMany({
+    include: {
+      bookings: {
+        where: {
+          status: { in: [BookingStatus.PENDING, BookingStatus.APPROVED] },
+        },
+        select: { id: true, status: true },
+      },
+    },
     orderBy: [
       { pricePerYear: 'desc' },
       { roomNumber: 'asc' }
@@ -20,7 +29,9 @@ export default async function RoomsPage() {
 
   // Calculate stats for the header
   const totalRooms = rooms.length;
-  const availableRooms = rooms.filter(r => r.status === "AVAILABLE").length;
+  const availableRooms = rooms.filter(
+    (room) => room.status === RoomStatus.AVAILABLE && room.bookings.length === 0,
+  ).length;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

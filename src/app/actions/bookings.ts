@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { BookingStatus, RoomStatus } from "@prisma/client";
+import { BookingStatus, PaymentStatus, RoomStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export type BookingFormState = {
@@ -23,6 +23,40 @@ function parsePositiveInteger(value: FormDataEntryValue | null) {
   return numberValue;
 }
 
+async function parseReceiptUrl(formData: FormData) {
+  const receiptFile = formData.get("receiptFile");
+  const receiptUrl = formData.get("receiptUrl")?.toString().trim();
+
+  if (receiptFile instanceof File && receiptFile.size > 0) {
+    if (!receiptFile.type.startsWith("image/")) {
+      return { error: "Bukti bayar harus berupa file gambar." };
+    }
+
+    if (receiptFile.size > 2 * 1024 * 1024) {
+      return { error: "Ukuran bukti bayar maksimal 2MB." };
+    }
+
+    const buffer = Buffer.from(await receiptFile.arrayBuffer());
+    return {
+      value: `data:${receiptFile.type};base64,${buffer.toString("base64")}`,
+    };
+  }
+
+  if (receiptUrl) {
+    try {
+      const parsedUrl = new URL(receiptUrl);
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        return { error: "URL bukti bayar harus diawali http atau https." };
+      }
+      return { value: receiptUrl };
+    } catch {
+      return { error: "URL bukti bayar tidak valid." };
+    }
+  }
+
+  return { error: "Bukti bayar wajib diunggah atau diisi URL-nya." };
+}
+
 export async function createBooking(
   _prevState: BookingFormState,
   formData: FormData,
@@ -39,6 +73,11 @@ export async function createBooking(
   const roomId = formData.get("roomId")?.toString();
   const durationYears = parsePositiveInteger(formData.get("durationYears"));
   const startDateValue = formData.get("startDate")?.toString();
+  const receipt = await parseReceiptUrl(formData);
+
+  if (receipt.error || !receipt.value) {
+    return { error: receipt.error };
+  }
 
   if (!roomId || !durationYears || !startDateValue) {
     return { error: "Tanggal mulai dan durasi sewa wajib diisi." };
@@ -90,6 +129,14 @@ export async function createBooking(
         durationYears,
         startDate,
         status: BookingStatus.PENDING,
+        payments: {
+          create: {
+            amount: room.pricePerYear * durationYears,
+            status: PaymentStatus.UNPAID,
+            dueDate: startDate,
+            receiptUrl: receipt.value,
+          },
+        },
       },
     });
 
@@ -144,6 +191,11 @@ export async function approveBooking(formData: FormData) {
       data: { status: BookingStatus.APPROVED },
     });
 
+    await tx.payment.updateMany({
+      where: { bookingId: booking.id, receiptUrl: { not: null } },
+      data: { status: PaymentStatus.PAID, paidAt: new Date() },
+    });
+
     await tx.room.update({
       where: { id: booking.roomId },
       data: { status: RoomStatus.OCCUPIED },
@@ -154,6 +206,7 @@ export async function approveBooking(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
+  revalidatePath("/dashboard");
 }
 
 export async function rejectBooking(formData: FormData) {
@@ -170,4 +223,5 @@ export async function rejectBooking(formData: FormData) {
   revalidatePath("/admin/bookings");
   revalidatePath("/admin");
   revalidatePath("/rooms");
+  revalidatePath("/dashboard");
 }

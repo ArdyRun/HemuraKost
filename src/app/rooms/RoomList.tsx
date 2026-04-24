@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { BedDouble, Bath, Square, Search, Filter, X, ChevronRight } from "lucide-react";
-import type { RoomStatus } from "@prisma/client";
+import type { BookingStatus, RoomStatus } from "@prisma/client";
 
 type RoomListItem = {
   id: string;
@@ -14,7 +14,37 @@ type RoomListItem = {
   sizeDescription: string;
   type: string;
   status: RoomStatus;
+  bookings: { id: string; status: BookingStatus }[];
 };
+
+type EffectiveStatus = RoomStatus | "PENDING";
+
+function getEffectiveStatus(room: RoomListItem): EffectiveStatus {
+  const hasPendingBooking = room.bookings.some(
+    (booking) => booking.status === "PENDING",
+  );
+  const hasApprovedBooking = room.bookings.some(
+    (booking) => booking.status === "APPROVED",
+  );
+
+  if (room.status === "AVAILABLE" && hasPendingBooking) return "PENDING";
+  if (hasApprovedBooking) return "OCCUPIED";
+  return room.status;
+}
+
+function getStatusLabel(status: EffectiveStatus) {
+  if (status === "PENDING") return "Menunggu Konfirmasi";
+  if (status === "AVAILABLE") return "Tersedia";
+  if (status === "OCCUPIED") return "Penuh";
+  return "Maintenance";
+}
+
+function getStatusClass(status: EffectiveStatus) {
+  if (status === "PENDING") return "bg-amber-500 text-white";
+  if (status === "AVAILABLE") return "bg-green-500 text-white";
+  if (status === "OCCUPIED") return "bg-red-500 text-white";
+  return "bg-yellow-500 text-white";
+}
 
 export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
   const [search, setSearch] = useState("");
@@ -28,7 +58,8 @@ export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
         roomNumberStr.toLowerCase().includes(search.toLowerCase()) ||
         room.type.toLowerCase().includes(search.toLowerCase());
       
-      const matchesStatus = statusFilter === "ALL" || room.status === statusFilter;
+      const effectiveStatus = getEffectiveStatus(room);
+      const matchesStatus = statusFilter === "ALL" || effectiveStatus === statusFilter;
       
       const matchesType = typeFilter === "ALL" || 
         (typeFilter === "AC" && room.hasAC) || 
@@ -80,6 +111,7 @@ export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
               >
                 <option value="ALL">Semua Status</option>
                 <option value="AVAILABLE">Tersedia (Kosong)</option>
+                <option value="PENDING">Menunggu Konfirmasi</option>
                 <option value="OCCUPIED">Penuh (Terisi)</option>
                 <option value="MAINTENANCE">Maintenance</option>
               </select>
@@ -123,7 +155,7 @@ export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
             )}
             {statusFilter !== "ALL" && (
               <span className="px-2 py-1 bg-cta/10 text-cta text-xs font-medium rounded-md flex items-center gap-1">
-                Status: {statusFilter === "AVAILABLE" ? "Tersedia" : statusFilter === "OCCUPIED" ? "Penuh" : "Maintenance"}
+                Status: {statusFilter === "AVAILABLE" ? "Tersedia" : statusFilter === "PENDING" ? "Menunggu Konfirmasi" : statusFilter === "OCCUPIED" ? "Penuh" : "Maintenance"}
                 <X className="w-3 h-3 cursor-pointer" onClick={() => setStatusFilter("ALL")} />
               </span>
             )}
@@ -150,6 +182,7 @@ export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
       {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredRooms.map((room) => {
+          const effectiveStatus = getEffectiveStatus(room);
           let mockImage = "/mock kamar1.png";
           if (room.type.toLowerCase().includes("vvip") || room.type.toLowerCase().includes("ekonomis")) {
             mockImage = "/mock kamar2.png";
@@ -160,13 +193,8 @@ export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
               {/* Gambar Kamar */}
               <div className="aspect-[4/3] overflow-hidden relative">
                 <div className="absolute top-4 left-4 z-10 flex gap-2">
-                  <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-md ${
-                    room.status === "AVAILABLE" ? "bg-green-500 text-white" : 
-                    room.status === "OCCUPIED" ? "bg-red-500 text-white" : 
-                    "bg-yellow-500 text-white"
-                  }`}>
-                    {room.status === "AVAILABLE" ? "Tersedia" : 
-                     room.status === "OCCUPIED" ? "Penuh" : "Maintenance"}
+                  <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-md ${getStatusClass(effectiveStatus)}`}>
+                    {getStatusLabel(effectiveStatus)}
                   </span>
                   <span className="bg-white/90 text-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-md">
                     Kamar {room.roomNumber}
