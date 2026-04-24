@@ -32,12 +32,9 @@ export default async function Navbar() {
                   <div className="w-6 h-6 rounded-full bg-primary overflow-hidden border border-white/50">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
-                      src={user.image || "/default-avatar.png"} 
+                      src={user.image || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>"} 
                       alt="Avatar" 
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
-                      }}
                     />
                   </div>
                   <span className="text-white text-sm font-medium">
