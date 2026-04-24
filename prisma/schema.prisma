@@ -28,6 +28,7 @@ model User {
   password  String   // Hashed password for NextAuth Credentials
   role      Role     @default(USER)
   phone     String?
+  image     String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
