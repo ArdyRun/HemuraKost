@@ -8,7 +8,13 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn("credentials", Object.fromEntries(formData));
+    const role = formData.get('role');
+    const redirectTo = role === 'ADMIN' ? '/admin' : '/dashboard';
+
+    await signIn("credentials", {
+      ...Object.fromEntries(formData),
+      redirectTo,
+    });
     return undefined;
   } catch (error: any) {
     if (error instanceof AuthError) {
