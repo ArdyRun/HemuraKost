@@ -12,14 +12,14 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("Mulai melakukan Seeding Data Master...");
 
-  // Reset database untuk kamar dan pengguna saat discript
+  // Reset database
   await prisma.complaint.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.booking.deleteMany();
   await prisma.room.deleteMany();
   await prisma.user.deleteMany();
 
-  // Create Admin User
+  // ─── Admin User ──────────────────────────────────────────
   const adminPassword = await bcrypt.hash("admin123", 10);
   await prisma.user.create({
     data: {
@@ -30,55 +30,86 @@ async function main() {
       phone: "08123456789",
     },
   });
-  console.log("✅ Akun Admin berhasil dibuat (admin@hemurakost.com | Password: admin123)");
+  console.log("✅ Akun Admin: admin@hemurakost.com | admin123");
 
-  // Room rules and mapping
-  const VVIP_ROOMS = [19, 25];
-  const VIP_ROOM = 1;
-  const EKONOMIS_NON_ENSUITE_ROOM = 8;
-  const REGULER_NON_AC_ROOMS = [3, 5, 13, 18, 20, 21, 26];
+  // ─── Mapping Kamar ───────────────────────────────────────
+  // VVIP     : 19, 25  → 17jt, AC, KM Dalam, 6x7M (Paling Besar)
+  // VIP      : 1       → 16.5jt, AC, KM Dalam, Ukuran Besar
+  // Ekonomis : 8       → 13jt, Non-AC, KM Luar, Lantai Atas
+  // Non-AC Atas  : 13, 18, 20     → 13jt, Non-AC, KM Dalam
+  // Non-AC Bawah : 3, 5, 21, 26   → 13jt, Non-AC, KM Dalam
+  // Reguler AC   : sisa 16 kamar  → 16jt, AC, KM Dalam
+
+  const VVIP_ROOMS         = [19, 25];
+  const VIP_ROOM           = 1;
+  const EKONOMIS_ROOM      = 8;
+  const NON_AC_UPPER_ROOMS = [13, 18, 20];
+  const NON_AC_LOWER_ROOMS = [3, 5, 21, 26];
 
   for (let i = 1; i <= 27; i++) {
-    let pricePerYear = 16000000;
-    let hasAC = true;
-    let hasEnsuiteBath = true;
+    let pricePerYear    = 16_000_000;
+    let hasAC           = true;
+    let hasEnsuiteBath  = true;
     let sizeDescription = "Ukuran Standar";
-    let type = "Reguler AC";
+    let type            = "Reguler AC";
 
     if (VVIP_ROOMS.includes(i)) {
-      pricePerYear = 17000000;
-      sizeDescription = "Ukuran 6x7 Meter (Paling Besar)";
-      type = "VVIP";
+      pricePerYear    = 17_000_000;
+      sizeDescription = "6x7 Meter (Paling Besar)";
+      type            = "VVIP";
+      hasAC           = true;
+      hasEnsuiteBath  = true;
+
     } else if (i === VIP_ROOM) {
-      pricePerYear = 16500000;
+      pricePerYear    = 16_500_000;
       sizeDescription = "Ukuran Besar";
-      type = "VIP";
-    } else if (i === EKONOMIS_NON_ENSUITE_ROOM) {
-      pricePerYear = 13000000;
-      hasAC = false;
-      hasEnsuiteBath = false;
-      type = "Ekonomis";
-    } else if (REGULER_NON_AC_ROOMS.includes(i)) {
-      pricePerYear = 13000000;
-      hasAC = false;
-      type = "Reguler Non-AC";
+      type            = "VIP";
+      hasAC           = true;
+      hasEnsuiteBath  = true;
+
+    } else if (i === EKONOMIS_ROOM) {
+      pricePerYear    = 13_000_000;
+      sizeDescription = "Ukuran Standar (Lantai Atas)";
+      type            = "Ekonomis";
+      hasAC           = false;
+      hasEnsuiteBath  = false; // KM di Luar
+
+    } else if (NON_AC_UPPER_ROOMS.includes(i)) {
+      pricePerYear    = 13_000_000;
+      sizeDescription = "Ukuran Standar (Lantai Atas)";
+      type            = "Reguler Non-AC";
+      hasAC           = false;
+      hasEnsuiteBath  = true;
+
+    } else if (NON_AC_LOWER_ROOMS.includes(i)) {
+      pricePerYear    = 13_000_000;
+      sizeDescription = "Ukuran Standar (Lantai Bawah)";
+      type            = "Reguler Non-AC";
+      hasAC           = false;
+      hasEnsuiteBath  = true;
+
+    } else {
+      // Reguler AC (default)
+      pricePerYear    = 16_000_000;
+      sizeDescription = "Ukuran Standar";
+      type            = "Reguler AC";
+      hasAC           = true;
+      hasEnsuiteBath  = true;
     }
 
     await prisma.room.create({
-      data: {
-        roomNumber: i,
-        pricePerYear,
-        hasAC,
-        hasEnsuiteBath,
-        sizeDescription,
-        type,
-        status: "AVAILABLE",
-      },
+      data: { roomNumber: i, pricePerYear, hasAC, hasEnsuiteBath, sizeDescription, type, status: "AVAILABLE" },
     });
   }
 
-  console.log("✅ 27 Kamar berhasil dibuat dan dipetakan sesuai spesifikasi Hemura Kost.");
-  console.log("Seeding Database Selesai!");
+  console.log("✅ 27 Kamar berhasil dibuat sesuai spesifikasi Hemura Kost.");
+  console.log("   VVIP (19,25)       : Rp17jt · 6x7M · AC · KM Dalam");
+  console.log("   VIP  (1)           : Rp16.5jt · Ukuran Besar · AC · KM Dalam");
+  console.log("   Ekonomis (8)       : Rp13jt · Non-AC · KM Luar · Lantai Atas");
+  console.log("   Non-AC Atas(13,18,20): Rp13jt · Non-AC · KM Dalam");
+  console.log("   Non-AC Bawah(3,5,21,26): Rp13jt · Non-AC · KM Dalam");
+  console.log("   Reguler AC (sisa)  : Rp16jt · AC · KM Dalam");
+  console.log("\nSeeding Selesai!");
 }
 
 main()

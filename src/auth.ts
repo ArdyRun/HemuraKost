@@ -19,13 +19,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!user) return null;
 
+        const requestedRole = credentials.role as string;
+        if (requestedRole && user.role !== requestedRole) {
+          throw new Error("ROLE_MISMATCH");
+        }
+
         const passwordsMatch = await bcrypt.compare(
           credentials.password as string,
           user.password
         );
 
         if (passwordsMatch) {
-          // Hanya kembalikan id, nama, email, dan role untuk keamanan sesi
           return { id: user.id, name: user.name, email: user.email, role: user.role };
         }
 

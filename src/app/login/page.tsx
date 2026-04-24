@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Lock, ArrowRight, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import type { Metadata } from "next";
-import LoginForm from "@/components/LoginForm";
+import AuthForm from "@/components/AuthForm";
 
 export const metadata: Metadata = {
-  title: "Masuk | Hemura Kost",
-  description: "Masuk ke akun Hemura Kost Anda",
+  title: "Autentikasi | Hemura Kost",
+  description: "Masuk atau buat akun baru di Hemura Kost",
 };
 
-export default function LoginPage() {
+export default function AuthPage() {
   return (
     <div className="min-h-screen w-full flex bg-background">
       {/* Left side - Image */}
@@ -32,7 +32,7 @@ export default function LoginPage() {
               <span className="text-cta">Kenyamanan.</span>
             </h2>
             <p className="text-white/80 font-sans text-lg max-w-md leading-relaxed">
-              Masuk ke akun Anda untuk mengelola pemesanan dan menikmati layanan eksklusif Hemura Kost.
+              Kenyamanan hunian dan pelayanan eksklusif menanti Anda di Hemura Kost.
             </p>
           </div>
         </div>
@@ -44,21 +44,7 @@ export default function LoginPage() {
             <Home className="w-5 h-5" />
         </Link>
         
-        <div className="w-full max-w-md space-y-10">
-          <div className="text-center lg:text-left space-y-3">
-            <h1 className="font-serif text-4xl sm:text-5xl font-bold text-foreground tracking-tight">Selamat Datang</h1>
-            <p className="text-foreground/60 font-sans text-lg">Masuk untuk melanjutkan ke Hemura Kost</p>
-          </div>
-
-          <LoginForm />
-
-          <div className="mt-10 pt-8 border-t border-foreground/5 text-center text-[15px] text-foreground/60">
-            Belum punya akun?{' '}
-            <Link href="/register" className="font-semibold text-cta hover:text-cta/80 transition-colors">
-              Daftar di sini
-            </Link>
-          </div>
-        </div>
+        <AuthForm />
       </div>
     </div>
   );
