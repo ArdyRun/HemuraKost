@@ -4,8 +4,11 @@ import { useState, useRef, useActionState, useEffect } from "react";
 import { Camera, Save, Loader2, LogOut } from "lucide-react";
 import { updateProfile } from "@/app/actions/profile";
 import { signOut } from "next-auth/react";
+import type { User } from "@prisma/client";
 
-export default function ProfileForm({ user }: { user: any }) {
+type ProfileUser = Pick<User, "name" | "email" | "phone" | "image" | "role">;
+
+export default function ProfileForm({ user }: { user: ProfileUser }) {
   const [imagePreview, setImagePreview] = useState<string | null>(user.image || null);
   const [imageBase64, setImageBase64] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);

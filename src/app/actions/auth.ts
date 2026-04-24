@@ -10,7 +10,7 @@ export async function authenticate(
   try {
     await signIn("credentials", Object.fromEntries(formData));
     return undefined;
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AuthError) {
       if (error.cause?.err?.message === "ROLE_MISMATCH") {
         return "Role tidak cocok. Anda mencoba masuk dengan hak akses yang salah.";
@@ -23,7 +23,7 @@ export async function authenticate(
       }
     }
     // AuthError dari NextAuth membungkus custom Error di error.cause?.err
-    if (error.message === "ROLE_MISMATCH") {
+    if (error instanceof Error && error.message === "ROLE_MISMATCH") {
         return "Role tidak cocok. Anda mencoba masuk dengan hak akses yang salah.";
     }
     throw error;

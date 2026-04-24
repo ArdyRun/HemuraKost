@@ -1,5 +1,3 @@
-import { Building2 } from "lucide-react";
-
 export default function Footer() {
   return (
     <footer className="bg-surface border-t border-primary/10 py-12">

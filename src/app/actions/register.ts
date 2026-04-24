@@ -42,7 +42,7 @@ export async function registerUser(
       },
     });
 
-  } catch (error) {
+  } catch {
     return "Terjadi kesalahan sistem, gagal mendaftar.";
   }
 

@@ -5,7 +5,15 @@ import { auth } from "@/auth";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
-export async function updateProfile(prevState: any, formData: FormData) {
+export type ProfileFormState = {
+  error?: string;
+  success?: string;
+};
+
+export async function updateProfile(
+  _prevState: ProfileFormState | null,
+  formData: FormData,
+): Promise<ProfileFormState> {
   const session = await auth();
   if (!session?.user?.email) {
     return { error: "Akses ditolak. Silakan login kembali." };
@@ -17,7 +25,12 @@ export async function updateProfile(prevState: any, formData: FormData) {
   const image = formData.get("image") as string; // base64 string
 
   try {
-    const updateData: any = {};
+    const updateData: {
+      name?: string;
+      phone?: string;
+      image?: string;
+      password?: string;
+    } = {};
     if (name) updateData.name = name;
     if (phone) updateData.phone = phone;
     if (image) updateData.image = image;
@@ -37,7 +50,7 @@ export async function updateProfile(prevState: any, formData: FormData) {
     revalidatePath("/profile");
     revalidatePath("/"); // Update navbar
     return { success: "Profil berhasil diperbarui." };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Profile update error:", error);
     return { error: "Terjadi kesalahan saat memperbarui profil." };
   }

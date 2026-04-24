@@ -3,8 +3,20 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { BedDouble, Bath, Square, Search, Filter, X, ChevronRight } from "lucide-react";
+import type { RoomStatus } from "@prisma/client";
 
-export default function RoomList({ rooms }: { rooms: any[] }) {
+type RoomListItem = {
+  id: string;
+  roomNumber: number;
+  pricePerYear: number;
+  hasAC: boolean;
+  hasEnsuiteBath: boolean;
+  sizeDescription: string;
+  type: string;
+  status: RoomStatus;
+};
+
+export default function RoomList({ rooms }: { rooms: RoomListItem[] }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Home, LogOut, LayoutDashboard, DoorOpen, Pencil } from "lucide-react";
+import { LogOut, LayoutDashboard, DoorOpen, Pencil, ClipboardCheck } from "lucide-react";
 import { signOut } from "@/auth";
 
 export default async function AdminLayout({
@@ -11,7 +11,7 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     redirect("/login");
   }
 
@@ -29,6 +29,9 @@ export default async function AdminLayout({
           </Link>
           <Link href="/admin/rooms" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-cta/10 text-foreground transition-all">
             <DoorOpen className="w-5 h-5 text-cta" /> Manajemen Kamar
+          </Link>
+          <Link href="/admin/bookings" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-cta/10 text-foreground transition-all">
+            <ClipboardCheck className="w-5 h-5 text-cta" /> Persetujuan Booking
           </Link>
           <Link href="/editor" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-cta/10 text-foreground transition-all">
             <Pencil className="w-5 h-5 text-cta" /> Live Editor

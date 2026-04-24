@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function TenantDashboard() {
   const session = await auth();
@@ -24,12 +25,12 @@ export default async function TenantDashboard() {
             <p className="text-sm text-foreground/70 mb-4">
               Silakan jelajahi pilihan kamar kami dan lakukan pemesanan.
             </p>
-            <a 
+            <Link 
               href="/rooms" 
               className="inline-flex px-4 py-2 bg-cta text-white rounded-lg text-sm font-medium hover:bg-[#7a6548] transition-colors"
             >
               Lihat Daftar Kamar
-            </a>
+            </Link>
           </div>
         </div>
       </div>

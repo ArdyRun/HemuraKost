@@ -3,13 +3,21 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { RoomStatus } from "@prisma/client";
 
 // ─── Helpers ──────────────────────────────────────────────
 async function requireAdmin() {
   const session = await auth();
-  if (!session?.user || (session.user as any).role !== "ADMIN") {
+  if (!session?.user || session.user.role !== "ADMIN") {
     throw new Error("Akses ditolak. Hanya admin.");
   }
+}
+
+function parseRoomStatus(value: string | null) {
+  if (value && Object.values(RoomStatus).includes(value as RoomStatus)) {
+    return value as RoomStatus;
+  }
+  return RoomStatus.AVAILABLE;
 }
 
 // ─── CREATE ───────────────────────────────────────────────
@@ -25,7 +33,7 @@ export async function createRoom(
   const hasEnsuiteBath = formData.get("hasEnsuiteBath") === "true";
   const sizeDescription = formData.get("sizeDescription") as string;
   const type = formData.get("type") as string;
-  const status = (formData.get("status") as string) || "AVAILABLE";
+  const status = parseRoomStatus(formData.get("status")?.toString() ?? null);
 
   if (!roomNumber || !pricePerYear || !sizeDescription || !type) {
     return "Semua kolom wajib diisi.";
@@ -45,10 +53,10 @@ export async function createRoom(
         hasEnsuiteBath,
         sizeDescription,
         type,
-        status: status as any,
+        status,
       },
     });
-  } catch (error) {
+  } catch {
     return "Gagal menambahkan kamar. Terjadi kesalahan sistem.";
   }
 
@@ -71,7 +79,7 @@ export async function updateRoom(
   const hasEnsuiteBath = formData.get("hasEnsuiteBath") === "true";
   const sizeDescription = formData.get("sizeDescription") as string;
   const type = formData.get("type") as string;
-  const status = formData.get("status") as string;
+  const status = parseRoomStatus(formData.get("status")?.toString() ?? null);
 
   if (!id || !roomNumber || !pricePerYear || !sizeDescription || !type) {
     return "Semua kolom wajib diisi.";
@@ -95,10 +103,10 @@ export async function updateRoom(
         hasEnsuiteBath,
         sizeDescription,
         type,
-        status: status as any,
+        status,
       },
     });
-  } catch (error) {
+  } catch {
     return "Gagal memperbarui kamar. Terjadi kesalahan sistem.";
   }
 
@@ -121,7 +129,7 @@ export async function deleteRoom(id: string) {
     }
 
     await prisma.room.delete({ where: { id } });
-  } catch (error) {
+  } catch {
     return "Gagal menghapus kamar. Terjadi kesalahan sistem.";
   }
 

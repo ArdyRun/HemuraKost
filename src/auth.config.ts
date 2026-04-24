@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from 'next-auth';
+import { Role } from '@prisma/client';
 
 export const authConfig = {
   pages: {
@@ -7,21 +8,25 @@ export const authConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
+        token.role = user.role;
         token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).role = token.role;
-        (session.user as any).id = token.id;
+      const tokenRole =
+        token.role === Role.ADMIN || token.role === Role.USER
+          ? token.role
+          : undefined;
+      if (session.user && tokenRole && typeof token.id === "string") {
+        session.user.role = tokenRole;
+        session.user.id = token.id;
       }
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const role = (auth?.user as any)?.role;
+      const role = auth?.user?.role;
       const isAdminRoute = nextUrl.pathname.startsWith('/admin') || nextUrl.pathname.startsWith('/editor');
       
       if (isAdminRoute) {

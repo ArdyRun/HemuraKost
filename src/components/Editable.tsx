@@ -28,8 +28,6 @@ export function EditableText({
   const [saving, setSaving] = useState(false);
   const elRef = useRef<HTMLElement>(null);
 
-  useEffect(() => { setLiveValue(displayValue); }, [displayValue]);
-
   // When entering edit mode, focus and select all text
   useEffect(() => {
     if (editing && elRef.current) {
@@ -150,11 +148,8 @@ export function EditableImage({
   const [url, setUrl] = useState(displaySrc);
   const [liveSrc, setLiveSrc] = useState(displaySrc);  // ← nilai yang ditampilkan
   const [saving, setSaving] = useState(false);
-  const [hovering, setHovering] = useState(false);
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => { setUrl(displaySrc); setLiveSrc(displaySrc); }, [displaySrc]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

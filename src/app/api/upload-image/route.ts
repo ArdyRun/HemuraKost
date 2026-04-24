@@ -6,7 +6,7 @@ import { revalidateTag } from "next/cache";
 export async function POST(req: NextRequest) {
   // Auth check
   const session = await auth();
-  if (!session?.user || (session.user as { role?: string }).role !== "ADMIN") {
+  if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Akses ditolak." }, { status: 401 });
   }
 
