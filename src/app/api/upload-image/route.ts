@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     create: { key, value: finalUrl, type: "IMAGE" },
   });
 
-  revalidateTag("site-content");
+  revalidateTag("site-content", "max");
 
   return NextResponse.json({ success: true, url: finalUrl });
 }

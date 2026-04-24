@@ -20,7 +20,7 @@ export async function updateSiteContent(key: string, value: string) {
     create: { key, value, type: "TEXT" },
   });
 
-  revalidateTag("site-content");
+  revalidateTag("site-content", "max");
   return { success: true };
 }
 
@@ -33,7 +33,7 @@ export async function updateSiteImage(key: string, imageUrl: string) {
     create: { key, value: imageUrl, type: "IMAGE" },
   });
 
-  revalidateTag("site-content");
+  revalidateTag("site-content", "max");
   return { success: true };
 }
 
@@ -63,6 +63,6 @@ export async function uploadSiteImageFormData(formData: FormData) {
     create: { key, value: finalUrl, type: "IMAGE" },
   });
 
-  revalidateTag("site-content");
+  revalidateTag("site-content", "max");
   return { success: true };
 }
