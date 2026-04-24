@@ -293,21 +293,13 @@ export function EditableImage({
           style={{ ...style, backgroundImage: `url('${liveSrc}')` }}
         />
         {/* Floating edit button — sits above ALL layers so it's always clickable */}
-        <div className="absolute top-6 right-6 z-[60] flex gap-2">
+        <div className="absolute top-7 right-6 z-[60] flex gap-2">
           <button
             type="button"
             onClick={() => setEditing(true)}
             className="flex items-center gap-2 bg-cta text-white pl-4 pr-5 py-2.5 rounded-full text-sm font-semibold shadow-2xl hover:bg-[#7a6548] transition-all hover:scale-105 active:scale-95 border border-white/20"
           >
             <ImageIcon className="w-4 h-4" /> Ganti Background
-          </button>
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 bg-white/90 text-primary pl-4 pr-5 py-2.5 rounded-full text-sm font-semibold shadow-2xl hover:bg-white transition-all hover:scale-105 active:scale-95"
-            title="Upload gambar dari perangkat"
-          >
-            <Pencil className="w-4 h-4" /> Upload File
           </button>
         </div>
         {modal}
