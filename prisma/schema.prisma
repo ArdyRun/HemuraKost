@@ -6,6 +6,15 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─── Live-Editable Site Content ────────────────────────────
+model SiteContent {
+  key       String   @id           // e.g. "hero_title", "hero_bg"
+  value     String   @db.Text
+  type      String   @default("TEXT") // TEXT or IMAGE
+  label     String?                // Human-readable label for admin UI
+  updatedAt DateTime @updatedAt
+}
+
 // User & Role System
 enum Role {
   USER

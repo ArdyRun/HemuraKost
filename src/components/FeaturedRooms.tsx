@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { BedDouble, Bath, Square } from "lucide-react";
+import { EditableText } from "./Editable";
+import type { ContentMap } from "@/lib/content";
 
-export default function FeaturedRooms() {
+export default function FeaturedRooms({ content, editMode }: { content?: ContentMap; editMode?: boolean }) {
   const rooms = [
     {
       id: 19,
@@ -37,8 +39,22 @@ export default function FeaturedRooms() {
     <section id="katalog" className="py-24 bg-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center mb-16">
-          <h2 className="font-serif text-3xl md:text-5xl text-primary mb-4">Pilihan Kamar</h2>
-          <p className="text-primary/70 max-w-lg">Total 27 Kamar dengan beragam tipe sesuai dengan kebutuhanmu.</p>
+          <EditableText
+            contentKey="rooms_title"
+            defaultValue="Pilihan Kamar"
+            value={content?.rooms_title}
+            as="h2"
+            className="font-serif text-3xl md:text-5xl text-primary mb-4"
+            editMode={editMode}
+          />
+          <EditableText
+            contentKey="rooms_subtitle"
+            defaultValue="Total 27 Kamar dengan beragam tipe sesuai dengan kebutuhanmu."
+            value={content?.rooms_subtitle}
+            as="p"
+            className="text-primary/70 max-w-lg"
+            editMode={editMode}
+          />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -68,9 +84,11 @@ export default function FeaturedRooms() {
                   </div>
                 </div>
                 
-                <Link href={`/rooms/${room.id}`} className="inline-block text-center border-b border-primary text-primary pb-1 font-semibold hover:text-cta hover:border-cta transition-colors duration-300 uppercase tracking-widest text-xs">
-                  Lihat Detail
-                </Link>
+                {!editMode && (
+                  <Link href={`/rooms/${room.id}`} className="inline-block text-center border-b border-primary text-primary pb-1 font-semibold hover:text-cta hover:border-cta transition-colors duration-300 uppercase tracking-widest text-xs">
+                    Lihat Detail
+                  </Link>
+                )}
               </div>
             </div>
           ))}
