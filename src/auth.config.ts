@@ -1,8 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
-import { Role } from '@prisma/client';
+import { APP_ROLES } from '@/lib/auth-role';
 
 export const authConfig = {
-  trustHost: true,
   pages: {
     signIn: '/login',
   },
@@ -16,7 +15,7 @@ export const authConfig = {
     },
     async session({ session, token }) {
       const tokenRole =
-        token.role === Role.ADMIN || token.role === Role.USER
+        token.role === APP_ROLES.ADMIN || token.role === APP_ROLES.USER
           ? token.role
           : undefined;
       if (session.user && tokenRole && typeof token.id === "string") {
